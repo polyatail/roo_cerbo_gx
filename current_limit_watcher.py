@@ -25,6 +25,8 @@ def main():
     print("[watcher] started; monitoring system...")
 
     while True:
+        phoenix.read_telemetry_frame()
+
         print(
             f"[ac: {van.air_conditioner_on} rpm: {van.rpm}] "
             + f"[state: {phoenix.state.name} curr: {phoenix.ac_current} volt: {phoenix.dc_voltage}] "
