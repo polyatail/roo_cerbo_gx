@@ -220,21 +220,17 @@ class VanOBDDriver:
         self._dbus_tank_service.add_path(
             "/Level", 0.0, gettextcallback=lambda p, v: f"{round(v, 2)}%"
         )
+        self._dbus_tank_service.add_path("/FluidType", 6, gettextcallback=lambda p, v: "Gasoline")
         self._dbus_tank_service.add_path(
-            "/FluidType",  6, gettextcallback=lambda p, v: "Gasoline"
+            "/Capacity", 0.0946353, gettextcallback=lambda p, v: f"{round(v, 2)}"
         )
         self._dbus_tank_service.add_path(
-            "/Capacity",  0.0946353, gettextcallback=lambda p, v: f"{round(v, 2)}"
+            "/CustomName", "Van Fuel Tank", writeable=True, gettextcallback=lambda p, v: v
         )
         self._dbus_tank_service.add_path(
-            "/CustomName",  "Van Fuel Tank", writeable=True, gettextcallback=lambda p, v: v
+            "/Remaining", 0.0, gettextcallback=lambda p, v: f"{round(v, 2)}"
         )
-        self._dbus_tank_service.add_path(
-            "/Remaining",  0.0, gettextcallback=lambda p, v: f"{round(v, 2)}"
-        )
-        self._dbus_tank_service.add_path(
-            "/Status",  0, gettextcallback=lambda p, v: f"{v}"
-        )
+        self._dbus_tank_service.add_path("/Status", 0, gettextcallback=lambda p, v: f"{v}")
 
         print(f"[obd] dbus services registered")
 
