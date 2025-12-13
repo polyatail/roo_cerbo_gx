@@ -196,10 +196,14 @@ class VanOBDDriver:
         self._dbus_service.register()
         self._dbus_service.add_path("/Van0/RPM", 0, gettextcallback=lambda p, v: f"{int(v)} rpm")
         self._dbus_service.add_path(
-            "/Van0/AirConditionerOn", 0, gettextcallback=lambda p, v: "On" if v == 1.0 else "Off"
+            "/Van0/AirConditionerOn",
+            0,
+            gettextcallback=lambda p, v: "On" if v == 1.0 else "Off",
         )
         self._dbus_service.add_path(
-            "/Van0/AlternatorCurrent", 0.0, gettextcallback=lambda p, v: f"{float(v):.1f} A"
+            "/Van0/AlternatorCurrent",
+            0.0,
+            gettextcallback=lambda p, v: f"{float(v):.1f} A",
         )
 
         self._dbus_tank_service = VeDbusService(
@@ -225,7 +229,10 @@ class VanOBDDriver:
             "/Capacity", 0.0946353, gettextcallback=lambda p, v: f"{round(v, 2)}"
         )
         self._dbus_tank_service.add_path(
-            "/CustomName", "Van Fuel Tank", writeable=True, gettextcallback=lambda p, v: v
+            "/CustomName",
+            "Van Fuel Tank",
+            writeable=True,
+            gettextcallback=lambda p, v: v,
         )
         self._dbus_tank_service.add_path(
             "/Remaining", 0.0, gettextcallback=lambda p, v: f"{round(v, 2)}"

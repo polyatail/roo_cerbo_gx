@@ -289,7 +289,9 @@ def add_name_owner_changed_receiver(dbus, name_owner_changed, namespace="com.vic
     else:
         try:
             dbus.add_signal_receiver(
-                name_owner_changed, signal_name="NameOwnerChanged", arg0namespace=namespace
+                name_owner_changed,
+                signal_name="NameOwnerChanged",
+                arg0namespace=namespace,
             )
         except TypeError:
             dbus.add_signal_receiver(name_owner_changed, signal_name="NameOwnerChanged")

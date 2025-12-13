@@ -341,7 +341,13 @@ because that takes care of all of that for you.
 
 class VeDbusItemImport(object):
     def __new__(
-        cls, bus, serviceName, path, eventCallback=None, createsignal=True, initialValue=notset
+        cls,
+        bus,
+        serviceName,
+        path,
+        eventCallback=None,
+        createsignal=True,
+        initialValue=notset,
     ):
         instance = object.__new__(cls)
 
@@ -361,7 +367,13 @@ class VeDbusItemImport(object):
     # 						leaving it to True, make sure to also subscribe to the NameOwnerChanged signal
     # 						elsewhere. See also note some 15 lines up.
     def __init__(
-        self, bus, serviceName, path, eventCallback=None, createsignal=True, initialValue=notset
+        self,
+        bus,
+        serviceName,
+        path,
+        eventCallback=None,
+        createsignal=True,
+        initialValue=notset,
     ):
         # TODO: is it necessary to store _serviceName and _path? Isn't it
         # stored in the bus_getobjectsomewhere?
@@ -533,7 +545,10 @@ class VeDbusRootExport(VeDbusTreeExport):
     @dbus.service.method("com.victronenergy.BusItem", out_signature="a{sa{sv}}")
     def GetItems(self):
         return {
-            path: {"Value": wrap_dbus_value(item.local_get_value()), "Text": item.GetText()}
+            path: {
+                "Value": wrap_dbus_value(item.local_get_value()),
+                "Text": item.GetText(),
+            }
             for path, item in self._service._dbusobjects.items()
         }
 
