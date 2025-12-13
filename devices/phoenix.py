@@ -206,7 +206,7 @@ class PhoenixInverter:
     @property
     def ac_current(self) -> float:
         try:
-            return round(float(self._telemetry["AC_OUT_I"]) / 1000.0, 2)
+            return round(float(self._telemetry["AC_OUT_I"]) / 10.0, 2)
         except KeyError:
             return 0.0
 
