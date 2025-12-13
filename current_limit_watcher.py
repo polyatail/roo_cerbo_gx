@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from devices.multiplus import MultiPlusInverter, MultiPlusACType
 from devices.phoenix import PhoenixInverter, PhoenixState
+from devices.system import VeSystem
 from devices.van import VanOBD
 import time
 
@@ -21,6 +22,7 @@ def main():
     multiplus = MultiPlusInverter(MULTIPLUS_TTY)
     phoenix = PhoenixInverter(PHOENIX_TTY)
     van = VanOBD(VAN_TTY)
+    ve_system = VeSystem()
 
     print("[watcher] started; monitoring system...")
 
@@ -30,19 +32,26 @@ def main():
         print(
             f"[ac: {van.air_conditioner_on} rpm: {van.rpm}] "
             + f"[state: {phoenix.state.name} curr: {phoenix.ac_current} volt: {phoenix.dc_voltage}] "
-            + f"[limit: {multiplus.ac1_current_limit} type: {multiplus.ac1_type.name}]"
+            + f"[limit: {multiplus.ac1_current_limit} type: {multiplus.ac1_type.name}] "
+            + f"[soc: {ve_system.dc_soc}]"
         )
 
-        if van.rpm > 0 and not van.air_conditioner_on:
-            if multiplus.ac1_current_limit > CURR_LIMIT_LOW:
-                multiplus.ac1_current_limit = CURR_LIMIT_LOW
+        if (van.rpm > 0 and not van.air_conditioner_on) or ve_system.dc_soc < 5:
+            if phoenix.ac_current > 0:
+                if multiplus.ac1_current_limit > CURR_LIMIT_LOW:
+                    multiplus.ac1_current_limit = CURR_LIMIT_LOW
+
+                if multiplus.ac1_type != MultiPlusACType.GENERATOR:
+                    multiplus.ac1_type = MultiPlusACType.GENERATOR
+            else:
+                if multiplus.ac1_current_limit == CURR_LIMIT_LOW:
+                    multiplus.ac1_current_limit = CURR_LIMIT_HIGH
+
+                if multiplus.ac1_type != MultiPlusACType.SHORE:
+                    multiplus.ac1_type = MultiPlusACType.SHORE
 
             if phoenix.state != PhoenixState.INVERTING:
                 phoenix.on()
-
-            if phoenix.ac_current > 0 and multiplus.ac1_type != MultiPlusACType.GENERATOR:
-                multiplus.ac1_type = MultiPlusACType.GENERATOR
-
         else:
             if phoenix.state == PhoenixState.INVERTING:
                 phoenix.off()
